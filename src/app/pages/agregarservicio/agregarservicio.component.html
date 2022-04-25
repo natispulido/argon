@@ -1,0 +1,56 @@
+<div class="header bg-gradient-success pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+      <br>
+      <br>
+      <div class="row">
+        <div class="container text-center">
+          <h1>Creación de servicios</h1>
+          <hr class="my-2" style="width: 100%; margin-left: 0;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container-fluid mt--7">
+  <div class="submit-form">
+    <div *ngIf="!submitted">
+      <div class="form-group">
+        <label for="name">Nombre del servicio:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          required
+          [(ngModel)]="servicio.name"
+          name="name"
+        />
+      </div>
+      <div class="form-group">
+        <label for="description">Descripción para este servicio:</label>
+        <textarea
+          type="text-area"
+          class="form-control"
+          id="description"
+          required
+          [(ngModel)]="servicio.description"
+          name="description"
+        ></textarea>
+      </div>
+      <button (click)="guardarServicio()" class="btn btn-success">Crear</button>
+    </div>
+    <div *ngIf="submitted">
+      <h3>¡Ha creado el servicio satisfactoriamente!</h3>
+      <br>
+      <button class="btn btn-success" (click)="nuevoServicio()">Nuevo Servicio</button>
+    </div>
+  </div>
+  <br>
+  <br>
+</div>

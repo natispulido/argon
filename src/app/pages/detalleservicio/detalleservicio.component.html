@@ -1,0 +1,88 @@
+<br>
+<br>
+<br>
+<br>
+<div class="container-fluid mt--7">
+  <div *ngIf="servicioActual" class="edit-form">
+    <h4>Servicio</h4>
+    <form>
+      <div class="form-group">
+        <label for="name">Nombre del servicio</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          [(ngModel)]="servicioActual.name"
+          name="name"
+        />
+      </div>
+      <div class="form-group">
+        <label for="description">Descripción</label>
+        <textarea
+          type="text"
+          class="form-control"
+          id="description"
+          [(ngModel)]="servicioActual.description"
+          name="description"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label><strong>Estado:</strong></label>
+        {{ servicioActual.active ? "Activo" : "Suspendido" }}
+      </div>
+    </form>
+    <ng-template #contentEstado let-modal>
+      <div class="modal-body text-center bg-info rounded-top pb-0">
+        <h4>¡El estado fue actualizado exitosamente!</h4>
+        <hr>
+      </div>
+      <div class="modal-footer bg-info pt-0">
+        <button type="button" class="btn btn-light" (click)="modal.close()">Cerrar</button>
+      </div>
+    </ng-template>
+    <ng-template #contentActualizar let-modal>
+      <div class="modal-body text-center bg-info rounded-top pb-0">
+        <h4>¡Los datos se actualizaron exitosamente!</h4>
+        <hr>
+      </div>
+      <div class="modal-footer bg-info pt-0">
+        <button type="button" class="btn btn-light" (click)="modal.close()">Cerrar</button>
+      </div>
+    </ng-template>
+    <ng-template #contentEliminar let-modal>
+      <div class="modal-body text-center bg-info rounded-top pb-0">
+        <h4>¡El servicio fue eliminado exitosamente!</h4>
+        <hr>
+      </div>
+      <div class="modal-footer bg-info pt-0">
+        <button type="button" class="btn btn-light" (click)="modal.close()">Cerrar</button>
+      </div>
+    </ng-template>
+    <button
+      class="badge badge-primary mr-3"
+      *ngIf="servicioActual.active"
+      (click)="[actualizarEstado(false),openSm(contentEstado)]"
+    >
+      Suspender
+    </button>
+    <button
+      *ngIf="!servicioActual.active"
+      class="badge badge-primary mr-3"
+      (click)="[actualizarEstado(true),openSm(contentEstado)]"
+    >
+      Activar
+    </button>
+    <button type="submit" class="badge badge-success mr-3" (click)="[actualizarServicio(),openSm(contentActualizar)]">
+      Actualizar
+    </button>
+    <button class="badge badge-danger" (click)="[eliminarServicio(),openSm(contentEliminar)]">
+      Eliminar
+    </button>
+    <!-- <p>{{ message }}</p> -->
+  </div>
+  <div *ngIf="!servicioActual">
+    <br />
+    <br>
+    <p>No se puede acceder a este servicio...</p>
+  </div>
+</div>

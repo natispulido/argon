@@ -1,0 +1,51 @@
+<div class="header bg-gradient-success pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+      <br>
+      <br>
+      <div class="row">
+        <div class="container text-center">
+          <h1>Servicios Actuales</h1>
+          <hr class="my-2" style="width: 100%; margin-left: 0;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container-fluid mt--7">
+  <div class="list row">
+    <div class="col-md-6">
+      <ul class="list-group">
+        <li
+          class="list-group-item"
+          *ngFor="let servicio of servicios; let i = indice"
+          [class.active]="servicio == servicioActual"
+          (click)="fijarServicioActivo(servicio, i)"
+        >
+          {{ servicio.name }}
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <div *ngIf="servicioActual">
+        <app-detalleservicio
+          (refreshList)="refrescarLista()"
+          [servicio]="servicioActual"
+        ></app-detalleservicio>
+      </div>
+      <div *ngIf="!servicioActual">
+        <p class="text-center">◄ Haga clic en un servicio para verlo en detalle</p>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<br>
+<br>
+<br>

@@ -1,0 +1,219 @@
+<div class="page-content">
+  <div class="content-header"></div>
+  <div class="content-body">
+    <div class="row">
+      <div class="col-12 col-md-12 col-lg-4">
+        <div
+          class="card shadow mb-2"
+          style="max-height: 80vh; overflow-y: auto"
+        >
+          <div class="card-body">
+            <div
+              class="form-group mb-2"
+              [ngClass]="{ focused: focus === true }"
+            >
+              <div
+                class="input-group input-group-alternative mb-2"
+                style="border: 1px solid #bbbcd8; box-shadow: none"
+              >
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="fas fa-search"></i
+                  ></span>
+                </div>
+                <input
+                  (keyup)="searchServiceByName($event.target.value)"
+                  (focus)="focus = true"
+                  (blur)="focus = false"
+                  class="form-control"
+                  placeholder="Buscar"
+                  type="text"
+                />
+              </div>
+
+              <button
+                class="btn btn-success w-100"
+                (click)="resetFormAndClearFields(); statusNew = true"
+              >
+                {{
+                  statusNew
+                    ? "Añadiendo servicio"
+                    : statusEdit
+                    ? "Editando servicio"
+                    : "Nuevo servicio"
+                }}
+              </button>
+            </div>
+
+            <ng-container *ngFor="let servicio of serviciosFilter">
+              <div
+                class="item-service mb-2"
+                [ngClass]="{
+                  'item-service-selected': serviceSelected.id === servicio.id
+                }"
+                (click)="resetFormAndClearFields(); serviceSelected = servicio"
+              >
+                <i
+                  class="fas fa-circle"
+                  [ngClass]="{
+                    active: servicio?.active,
+                    inactive: !servicio?.active
+                  }"
+                ></i>
+                <section>
+                  <span>{{ servicio?.name }}</span>
+                </section>
+              </div>
+            </ng-container>
+            <ng-container
+              *ngIf="serviciosFilter.length === 0 && loadingStatus.servicios"
+            >
+              <div class="d-flex align-items-center justify-content-center">
+                <i class="fa-spinner fa-spin fas"></i>
+                <span class="text-center ml-2">Cargando servicios...</span>
+              </div>
+            </ng-container>
+            <ng-container
+              *ngIf="serviciosFilter.length === 0 && !loadingStatus.servicios"
+            >
+              <div class="d-flex align-items-center justify-content-center">
+                <span class="text-center ml-2"
+                  >No hay servicios registrados</span
+                >
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-12 col-lg-8">
+        <div class="card shadow">
+          <div class="card-body">
+            <h1>Detalle servicio</h1>
+            <ng-container
+              *ngIf="!serviceSelected?.id && !statusEdit && !statusNew"
+            >
+              <h4 class="text-center">NO HAS SELECCIONADO NINGÚN SERVICIO</h4>
+            </ng-container>
+            <ng-container
+              *ngIf="serviceSelected?.id && !statusEdit && !statusNew"
+            >
+              <div class="row">
+                <div class="col-12 col-md-6 mb-2">
+                  <div class="item-detail-service">
+                    <p class="m-0"><b>Nombre</b></p>
+                    <small>{{ serviceSelected?.name }}</small>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 mb-2">
+                  <div class="item-detail-service">
+                    <p class="m-0"><b>Estado</b></p>
+                    <small>
+                      {{ serviceSelected?.active ? "Activo" : "Inactivo" }}
+                    </small>
+                  </div>
+                </div>
+                <div class="col-12 mb-4">
+                  <div class="item-detail-service">
+                    <p class="m-0"><b>Descripción</b></p>
+                    <small>
+                      {{ serviceSelected?.description }}
+                    </small>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <button type="button" class="btn btn-danger mr-2" (click)="deleteService(serviceSelected.id)">
+                    Eliminar
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-warning"
+                    (click)="
+                      setValueUpdateService(serviceSelected);
+                      statusNew = false;
+                      statusEdit = true
+                    "
+                  >
+                    Actualizar
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container
+              *ngIf="
+                (serviceSelected?.id && statusEdit) ||
+                (!serviceSelected?.id && statusNew)
+              "
+            >
+              <form class="row">
+                <div class="col-12 col-md-6">
+                  <div class="form-group">
+                    <label for="">Nombre</label>
+                    <input
+                      (keyup)="serviciosForm.name = $event.target.value"
+                      [value]="serviciosForm.name"
+                      class="form-control"
+                      type="text"
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label>Estado</label>
+                  <label class="primary-form-switch">
+                    <input
+                      (change)="serviciosForm.active = !serviciosForm.active"
+                      [attr.data-checked]="serviciosForm.active"
+                      class="primary-switch"
+                      type="checkbox"
+                    />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                <div class="col-12">
+                  <div class="form-group">
+                    <label for="">Descripción</label>
+                    <textarea
+                      (keyup)="serviciosForm.description = $event.target.value"
+                      [value]="serviciosForm.description"
+                      class="form-control"
+                      rows="5"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <button
+                    class="btn btn-success mr-2"
+                    (click)="addOrUpdateService(statusEdit, statusNew)"
+                  >
+                    {{ statusEdit ? "Guardar cambios" : "Agregar servicio" }}
+                  </button>
+                  <button
+                    class="btn btn-danger"
+                    (click)="resetFormAndClearFields()"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="primary-alert alert-{{
+    configAlert.status ? 'open' : 'closed'
+  }} alert-{{ configAlert.class }}"
+  (click)="configAlert.status = false"
+>
+  <span>{{ configAlert.message }}</span>
+  <span>{{ configAlert.time }}</span>
+</div>
+
+<!-- <div class="primary-floating-button">
+  <i class="fa fa-plus"></i>
+</div> -->
